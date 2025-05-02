@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>편의점 행사상품 모음</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='Css_csweb.css') }}" rel="stylesheet">
+        
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark {{ current_brand if current_brand else 'all' }}">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                {% if current_brand %}
+                <img src="{{ cvs_brands[current_brand]['logo'] }}" alt="{{ cvs_brands[current_brand]['name'] }} Logo" style="height: 30px; margin-right: 10px;">
+                {{ cvs_brands[current_brand]['name'] }} 행사상품
+                {% else %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-shop" viewBox="0 0 16 16">
+                    <path d="M2.97 1.35A1 1 0 0 1 3.73 1h8.54a1 1 0 0 1 .76.35l2.609 3.044A1.5 1.5 0 0 1 16 5.37v.255a2.375 2.375 0 0 1-4.25 1.458A2.371 2.371 0 0 1 9.875 8 2.37 2.37 0 0 1 8 7.083 2.37 2.37 0 0 1 6.125 8a2.37 2.37 0 0 1-1.875-.917A2.375 2.375 0 0 1 0 5.625V5.37a1.5 1.5 0 0 1 .361-.976l2.61-3.045z"/>
+                </svg>
+                편의점 행사상품 모음
+                {% endif %}
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">전체상품</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            행사유형
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/products/1+1">1+1</a></li>
+                            <li><a class="dropdown-item" href="/products/2+1">2+1</a></li>
+                            <li><a class="dropdown-item" href="/products/할인">할인</a></li>
+                            <li><a class="dropdown-item" href="/products/덤증정">덤증정</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            카테고리
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/category/음료">음료</a></li>
+                            <li><a class="dropdown-item" href="/category/과자">과자</a></li>
+                            <li><a class="dropdown-item" href="/category/식품">식품</a></li>
+                            <li><a class="dropdown-item" href="/category/생활용품">생활용품</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <!-- 검색 폼 추가 -->
+                <form class="d-flex" action="/search" method="get">
+                    <input class="form-control me-2" type="search" name="keyword" placeholder="상품명 검색" 
+                           value="{{ search_keyword or '' }}" aria-label="Search">
+                    <button class="btn btn-outline-light" type="submit">검색</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="brand-selection" style="display: flex; justify-content: center; gap: 10px; margin: 20px 0;">
+            <!-- 모든 편의점 -->
+            <a href="/" style="text-decoration: none;">
+                <div class="brand-item" style="border: 2px solid #333; border-radius: 30px; padding: 10px 20px; display: flex; align-items: center; width: 150px; justify-content: center;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16" style="margin-right: 5px;">
+                        <path d="M2.97 1.35A1 1 0 0 1 3.73 1h8.54a1 1 0 0 1 .76.35l2.609 3.044A1.5 1.5 0 0 1 16 5.37v.255a2.375 2.375 0 0 1-4.25 1.458A2.371 2.371 0 0 1 9.875 8 2.37 2.37 0 0 1 8 7.083 2.37 2.37 0 0 1 6.125 8a2.37 2.37 0 0 1-1.875-.917A2.375 2.375 0 0 1 0 5.625V5.37a1.5 1.5 0 0 1 .361-.976l2.61-3.045z"/>
+                    </svg>
+                    <div style="text-align: center;">모든 편의점</div>
+                </div>
+            </a>
+            
+            <!-- GS25 -->
+            <a href="/brand/gs25" style="text-decoration: none;">
+                <div class="brand-item" style="border: 2px solid #00ac4a; border-radius: 30px; padding: 10px 20px; display: flex; align-items: center; width: 150px; justify-content: center;">
+                    <img src="/static/logo_png/gs25.png" alt="GS25 Logo" style="height: 30px; margin-right: 5px;">
+                    <div style="color: #00ac4a; text-align: center;"></div>
+                </div>
+            </a>
+            
+            <!-- CU -->
+            <a href="/brand/cu" style="text-decoration: none;">
+                <div class="brand-item" style="border: 2px solid #0076c0; border-radius: 30px; padding: 10px 20px; display: flex; align-items: center; width: 150px; justify-content: center;">
+                    <img src="/static/logo_png/cu.png" alt="CU Logo" style="height: 30px; margin-right: 5px;">
+                    <div style="color: #0076c0; text-align: center;"></div>
+                </div>
+            </a>
+            
+            <!-- 이마트24 -->
+            <a href="/brand/emart24" style="text-decoration: none;">
+                <div class="brand-item" style="border: 2px solid #f8b500; border-radius: 30px; padding: 10px 20px; display: flex; align-items: center; width: 150px; justify-content: center;">
+                    <img src="/static/logo_png/emart24.png" alt="이마트24 Logo" style="height: 30px; margin-right: 5px;">
+                    <div style="color: #f8b500; text-align: center;"></div>
+                </div>
+            </a>
+            
+            <!-- 세븐일레븐 -->
+            <a href="/brand/seven" style="text-decoration: none;">
+                <div class="brand-item" style="border: 2px solid #e72410; border-radius: 30px; padding: 10px 20px; display: flex; align-items: center; width: 150px; justify-content: center;">
+                    <img src="/static/logo_png/7-eleven.png" alt="세븐일레븐 Logo" style="height: 30px; margin-right: 5px;">
+                    <div style="color: #e72410; text-align: center;"></div>
+                </div>
+            </a>
+        </div>
+
+        <!-- 필터링 카드 추가 -->
+        <div class="card filter-card">
+            <div class="card-body">
+                <h5 class="card-title mb-3">상세 필터</h5>
+                <form action="/filter" method="get" class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label">편의점</label>
+                        <select class="form-select" name="cvs_brand">
+                            <option value="">전체</option>
+                            <option value="gs25" {% if current_brand == 'gs25' %}selected{% endif %}>GS25</option>
+                            <option value="cu" {% if current_brand == 'cu' %}selected{% endif %}>CU</option>
+                            <option value="emart24" {% if current_brand == 'emart24' %}selected{% endif %}>이마트24</option>
+                            <option value="seven" {% if current_brand == 'seven' %}selected{% endif %}>세븐일레븐</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">행사유형</label>
+                        <select class="form-select" name="promotion_type">
+                            <option value="">전체</option>
+                            <option value="1+1" {% if current_promotion == '1+1' %}selected{% endif %}>1+1</option>
+                            <option value="2+1" {% if current_promotion == '2+1' %}selected{% endif %}>2+1</option>
+                            <option value="할인" {% if current_promotion == '할인' %}selected{% endif %}>할인</option>
+                            <option value="덤증정" {% if current_promotion == '덤증정' %}selected{% endif %}>덤증정</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">카테고리</label>
+                        <select class="form-select" name="category">
+                            <option value="">전체</option>
+                            <option value="음료" {% if current_category == '음료' %}selected{% endif %}>음료</option>
+                            <option value="과자" {% if current_category == '과자' %}selected{% endif %}>과자</option>
+                            <option value="식품" {% if current_category == '식품' %}selected{% endif %}>식품</option>
+                            <option value="생활용품" {% if current_category == '생활용품' %}selected{% endif %}>생활용품</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">정렬기준</label>
+                        <select class="form-select" name="sort_by">
+                            <option value="id" {% if current_sort == 'id' %}selected{% endif %}>최신순</option>
+                            <option value="상품명" {% if current_sort == '상품명' %}selected{% endif %}>상품명</option>
+                            <option value="가격" {% if current_sort == '가격' %}selected{% endif %}>가격</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">정렬방향</label>
+                        <select class="form-select" name="sort_order">
+                            <option value="DESC" {% if current_order == 'DESC' %}selected{% endif %}>내림차순</option>
+                            <option value="ASC" {% if current_order == 'ASC' %}selected{% endif %}>오름차순</option>
+                        </select>
+                    </div>
+                    <div class="col-md-1 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary">적용
+                </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col">
+                <h1>
+                    {% if current_brand %}
+                    {{ cvs_brands[current_brand]['name'] }} 행사상품
+                    {% else %}
+                    편의점 행사상품 모음
+                    {% endif %}
+                </h1>
+                
+                {% if current_promotion %}
+                <h4>'{{ current_promotion }}' 행사 상품</h4>
+                {% elif current_category %}
+                <h4>'{{ current_category }}' 카테고리 상품</h4>
+                {% elif search_keyword %}
+                <h4>'{{ search_keyword }}' 검색 결과</h4>
+                {% endif %}
+                
+                <!-- 검색 결과 수 표시 -->
+                {% if products %}
+                <p class="search-count">총 {{ products|length }}개의 상품</p>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if products %}
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+            {% for product in products %}
+            <div class="col mb-4">
+                <div class="card product-card h-100">
+                    <div class="product-img-container">
+                        {% if product.image_url %}
+                        <img src="{{ product.image_url }}" class="product-img" alt="{{ product.product_name }}">
+                        {% else %}
+                        <div class="text-center p-4">이미지 없음</div>
+                        {% endif %}
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.product_name }}</h5>
+                        <p class="price">{{ product.price }}원</p>
+                        <p class="card-text">
+                            <small class="text-muted">{{ product.event_category }}</small>
+                        </p>
+                    </div>
+                    <div class="promotion-badge">
+                        <span class="badge bg-primary">{{ product.promotion_type }}</span>
+                    </div>
+                    <div class="brand-badge {{ product.cvs_brand }}">
+                        <img src="{{ product.brand_info.logo }}" alt="{{ product.brand_info.name }}">
+                        {{ product.brand_info.name }}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+            현재 표시할 상품이 없습니다.
+        </div>
+        {% endif %}
+        
+        <!-- 추후 페이지네이션 구현을 위한 공간 -->
+        <div class="pagination-container">
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">이전</a>
+                    </li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">다음</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white mt-5 py-3">
+        <div class="container text-center">
+            <p>&copy; 2025 편의점 행사상품 모음 웹사이트</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

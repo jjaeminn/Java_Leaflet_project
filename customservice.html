@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>고객센터</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+        }
+        
+        body {
+            color: #333;
+            line-height: 1.5;
+        }
+        
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .container {
+            display: flex;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* 왼쪽 사이드바 */
+        .sidebar {
+            width: 250px;
+            padding-right: 30px;
+            border-right: 1px solid #eee;
+        }
+        
+        .sidebar h1 {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+        
+        .sidebar-menu {
+            margin-bottom: 40px;
+        }
+        
+        .sidebar-menu a {
+            display: block;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 16px;
+            color: #555;
+        }
+        
+        .sidebar-contact {
+            margin-top: 50px;
+        }
+        
+        .sidebar-contact h2 {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .sidebar-contact .phone {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .sidebar-contact .small {
+            font-size: 12px;
+            color: #888;
+        }
+        
+        .sidebar-contact .hours {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .sidebar-contact .closed {
+            margin-top: 5px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .online-order {
+            margin-top: 40px;
+        }
+        
+        .online-order h3 {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: #555;
+        }
+        
+        .online-order p {
+            font-size: 14px;
+            color: #888;
+        }
+        
+        /* 메인 콘텐츠 */
+        .main-content {
+            flex: 1;
+            padding-left: 40px;
+        }
+        
+        .chat-box {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+            padding: 30px;
+            margin-bottom: 50px;
+            text-align: center;
+            border: 1px solid #eee;
+        }
+        
+        .chat-icon {
+            color: #e74c99;
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+        
+        .chat-title {
+            color: #e74c99;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        .chat-description {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+        
+        .chat-button {
+            display: inline-block;
+            padding: 12px 40px;
+            background-color: #fff;
+            color: #e74c99;
+            border: 1px solid #e74c99;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .chat-button:hover {
+            background-color: #fce8f1;
+        }
+        
+        .faq-section h2 {
+            font-size: 22px;
+            margin-bottom: 20px;
+        }
+        
+        .search-box {
+            position: relative;
+            margin-bottom: 30px;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            outline: none;
+        }
+        
+        .search-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px;
+            color: #666;
+        }
+        
+        .faq-tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .faq-tab {
+            padding: 15px 20px;
+            font-size: 16px;
+            color: #666;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        
+        .faq-tab.active {
+            color: #000;
+            font-weight: bold;
+            border-bottom: 2px solid #000;
+        }
+        
+        .faq-top h3 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .view-all {
+            font-size: 14px;
+            color: #666;
+            display: flex;
+            align-items: center;
+        }
+        
+        .faq-list {
+            border-top: 1px solid #ddd;
+        }
+        
+        .faq-item {
+            padding: 20px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .faq-item a {
+            color: #333;
+            font-size: 16px;
+        }
+        
+        .os-info {
+            text-align: right;
+            color: #999;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+        
+        .help-button {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 왼쪽 사이드바 -->
+        <div class="sidebar">
+            <h1>고객센터</h1>
+            
+            <div class="sidebar-menu">
+                <a href="#">쇼핑 FAQ</a>
+                <a href="#">공지사항</a>
+                <a href="#">1:1 문의하기</a>
+            </div>
+            
+            <div class="sidebar-contact">
+                <h2>롯데ON 고객센터</h2>
+                <div class="phone">1899-7000</div>
+                <div class="small">(유료)</div>
+                <div class="hours">월~금요일 09:00 ~ 18:00</div>
+                <div class="closed">주말, 공휴일 휴무</div>
+            </div>
+            
+            <div class="online-order">
+                <h3>오프라인 매장안내</h3>
+                <p>매장별 위치/연락처를 확인하세요</p>
+            </div>
+            
+            <div class="sidebar-menu">
+                <a href="#">롯데마트</a>
+                <a href="#">롯데슈퍼 프레시</a>
+                <a href="#">롯데백화점</a>
+            </div>
+            
+            <div class="online-order" style="margin-top: 30px;">
+                <a href="#" class="help-button" style="width: 100%; text-align: center;">판매자원 센터 &gt;</a>
+            </div>
+        </div>
+        
+        <!-- 메인 콘텐츠 -->
+        <div class="main-content">
+            <!-- 채팅 상담 박스 -->
+            <div class="chat-box">
+                <div class="chat-icon">💬</div>
+                <div class="chat-title">24시간 똑똑한 채팅문의</div>
+                <div class="chat-description">24시간 365일 언제든지 상품 주문에서 주문 취소까지 쉽고 빠르게 해결해 보세요.</div>
+                <button class="chat-button">문의하기</button>
+            </div>
+            
+            <!-- FAQ 섹션 -->
+            <div class="faq-section">
+                <h2>FAQ 통합검색</h2>
+                
+                <div class="search-box">
+                    <input type="text" class="search-input" placeholder="궁금하신 내용을 입력해 주세요.">
+                    <span class="search-icon">🔍</span>
+                </div>
+                
+                <div class="faq-tabs">
+                    <div class="faq-tab active">자주 찾는 문의</div>
+                    <div class="faq-tab">교환반품/AS</div>
+                    <div class="faq-tab">이벤트/혜택</div>
+                    <div class="faq-tab">회원정보</div>
+                </div>
+                
+                <div class="faq-top">
+                    <h3>
+                        쇼핑 FAQ TOP 5
+                        <span class="view-all">전체보기 &gt;</span>
+                    </h3>
+                </div>
+                
+                <div class="faq-list">
+                    <div class="faq-item">
+                        <a href="#">[앱포인트] 롯데상품권을 롯데ON에서 사용 할 수 있나요?</a>
+                    </div>
+                    <div class="faq-item">
+                        <a href="#">[반품방법] 반품접수는 어떻게 하나요?</a>
+                    </div>
+                </div>
+                
+                <div class="os-info">
+                    Windows 정품 한글
+                    <a href="#" class="help-button">최근본상품(0) &gt;</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
