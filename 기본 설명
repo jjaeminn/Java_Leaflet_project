@@ -1,6 +1,8 @@
 편의점 main wesite로 실행은 website.py를 사용하면 된다. db는 로컬이라서 컴퓨터에서 실행하려면 크롤링 한 정보들을 db에 
 넣은 다음 웹페이지와 연결해야한다. 
+![Image](https://github.com/user-attachments/assets/0a307d97-2aac-4886-af78-97577965155f)
 
+![Image](https://github.com/user-attachments/assets/c5c22583-26a6-4103-9c27-2b50af309f28)
 
 사용 라이브러리 : 
 Package                    Version
