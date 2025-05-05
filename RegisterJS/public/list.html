@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>전단지 목록</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 1000px; margin: 0 auto; padding: 20px; }
+        h1 { text-align: center; margin-bottom: 30px; }
+        .flyer-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
+        .flyer-item { border: 1px solid #ddd; border-radius: 8px; overflow: hidden; transition: transform 0.3s; }
+        .flyer-item:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .flyer-image { width: 100%; height: 180px; object-fit: cover; }
+        .flyer-info { padding: 15px; }
+        .flyer-title { font-weight: bold; font-size: 18px; margin: 0 0 10px 0; }
+        .flyer-price { color: #e44d26; font-weight: bold; }
+        .flyer-event { background-color: #f5f5f5; padding: 3px 8px; border-radius: 4px; display: inline-block; margin-top: 5px; font-size: 12px; }
+        .add-button { position: fixed; bottom: 30px; right: 30px; background: #4CAF50; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 30px; text-decoration: none; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul>
+          <li><a href="/index.html">전단지 등록</a></li>
+          <li><a href="/list.html">전단지 목록</a></li>
+          <li><a href="/login.html">로그인</a></li>
+        </ul>
+      </nav>
+    <h1>전단지 목록</h1>
+    <div id="flyers-container" class="flyer-grid">
+        <!-- 여기에 전단지 항목들이 동적으로 추가됩니다 -->
+        <div class="loading">로딩 중...</div>
+    </div>
+    
+    <a href="/index.html" class="add-button">+</a>
+
+    <script>
+        // 페이지 로드 시 전단지 목록 가져오기
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                const response = await fetch('/api/flyers');
+                const result = await response.json();
+                
+                if (result.success) {
+                    displayFlyers(result.data);
+                } else {
+                    showError('데이터를 불러오는데 실패했습니다.');
+                }
+            } catch (error) {
+                showError('서버 연결 오류: ' + error.message);
+            }
+        });
+        
+        // 전단지 목록 표시 함수
+        function displayFlyers(flyers) {
+            const container = document.getElementById('flyers-container');
+            container.innerHTML = '';
+            
+            if (flyers.length === 0) {
+                container.innerHTML = '<div class="no-results">등록된 전단지가 없습니다.</div>';
+                return;
+            }
+            
+            flyers.forEach(flyer => {
+                const flyerElement = document.createElement('div');
+                flyerElement.className = 'flyer-item';
+                flyerElement.onclick = () => window.location.href = `/detail.html?id=${flyer.id}`;
+                
+                const imageUrl = flyer.image_url || '/placeholder.jpg';
+                
+                flyerElement.innerHTML = `
+                    <img src="${imageUrl}" alt="${flyer.product_name}" class="flyer-image">
+                    <div class="flyer-info">
+                        <h3 class="flyer-title">${flyer.product_name}</h3>
+                        <div class="flyer-price">${formatPrice(flyer.price)}원</div>
+                        ${flyer.event_type ? `<div class="flyer-event">${flyer.event_type}</div>` : ''}
+                    </div>
+                `;
+                
+                container.appendChild(flyerElement);
+            });
+        }
+        
+        // 가격 포맷팅 함수
+        function formatPrice(price) {
+            return parseInt(price).toLocaleString();
+        }
+        
+        // 오류 표시 함수
+        function showError(message) {
+            const container = document.getElementById('flyers-container');
+            container.innerHTML = `<div class="error">${message}</div>`;
+        }
+    </script>
+</body>
+</html>

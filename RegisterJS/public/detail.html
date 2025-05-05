@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>전단지 상세 정보</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .detail-container { display: flex; flex-wrap: wrap; gap: 30px; }
+        .flyer-image { width: 300px; height: 300px; object-fit: contain; }
+        .flyer-info { flex: 1; min-width: 300px; }
+        .product-name { font-size: 24px; margin-bottom: 10px; }
+        .price { color: #e44d26; font-size: 22px; font-weight: bold; margin-bottom: 20px; }
+        .info-row { margin-bottom: 10px; display: flex; }
+        .info-label { font-weight: bold; width: 100px; }
+        .description { margin-top: 20px; line-height: 1.6; }
+        .buttons { margin-top: 30px; display: flex; gap: 10px; }
+        .btn { padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; }
+        .btn-back { background: #f5f5f5; color: #333; }
+        .btn-edit { background: #4285f4; color: white; }
+        .btn-delete { background: #db4437; color: white; }
+        .message { padding: 10px; margin-top: 20px; border-radius: 4px; display: none; }
+        .success { background-color: #dff0d8; color: #3c763d; }
+        .error { background-color: #f2dede; color: #a94442; }
+    </style>
+</head>
+<body>
+    <div id="messageBox" class="message"></div>
+    <div id="detail-container" class="detail-container">
+        <div class="loading">로딩 중...</div>
+    </div>
+    
+    <div class="buttons">
+        <button class="btn btn-back" onclick="goBack()">목록으로</button>
+        <button class="btn btn-edit" id="editBtn">수정</button>
+        <button class="btn btn-delete" id="deleteBtn">삭제</button>
+    </div>
+
+    <script>
+        // URL에서 ID 파라미터 가져오기
+        const urlParams = new URLSearchParams(window.location.search);
+        const flyerId = urlParams.get('id');
+        
+        // 페이지 로드 시 전단지 정보 가져오기
+        document.addEventListener('DOMContentLoaded', async function() {
+            if (!flyerId) {
+                showMessage('오류: 전단지 ID가 지정되지 않았습니다.', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/flyers/${flyerId}`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    displayFlyerDetail(result.data);
+                    setupButtons(result.data);
+                } else {
+                    showMessage(result.message || '데이터를 불러오는데 실패했습니다.', 'error');
+                }
+            } catch (error) {
+                showMessage('서버 연결 오류: ' + error.message, 'error');
+            }
+        });
+        
+        // 전단지 상세 정보 표시
+        function displayFlyerDetail(flyer) {
+            const container = document.getElementById('detail-container');
+            const imageUrl = flyer.image_url || '/placeholder.jpg';
+            
+            container.innerHTML = `
+                <img src="${imageUrl}" alt="${flyer.product_name}" class="flyer-image">
+                <div class="flyer-info">
+                    <h1 class="product-name">${flyer.product_name}</h1>
+                    <div class="price">${formatPrice(flyer.price)}원</div>
+                    
+                    <div class="info-row">
+                        <div class="info-label">행사 유형:</div>
+                        <div>${flyer.event_type || '-'}</div>
+                    </div>
+                    
+                    <div class="info-row">
+                        <div class="info-label">행사 분류:</div>
+                        <div>${flyer.event_category || '-'}</div>
+                    </div>
+                    
+                    <div class="info-row">
+                        <div class="info-label">상품 유형:</div>
+                        <div>${flyer.product_type || '-'}</div>
+                    </div>
+                    
+                    <div class="info-row">
+                        <div class="info-label">키워드:</div>
+                        <div>${flyer.search_keywords || '-'}</div>
+                    </div>
+                    
+                    <div class="description">
+                        ${flyer.description ? flyer.description.replace(/\n/g, '<br>') : '설명이 없습니다.'}
+                    </div>
+                </div>
+            `;
+        }
+        
+        // 버튼 기능 설정
+        function setupButtons(flyer) {
+            // 수정 버튼
+            document.getElementById('editBtn').addEventListener('click', function() {
+                window.location.href = `/edit.html?id=${flyer.id}`;
+            });
+            
+            // 삭제 버튼
+            document.getElementById('deleteBtn').addEventListener('click', async function() {
+                if (confirm('정말로 이 전단지를 삭제하시겠습니까?')) {
+                    try {
+                        const response = await fetch(`/api/flyers/${flyer.id}`, {
+                            method: 'DELETE'
+                        });
+                        
+                        const result = await response.json();
+                        
+                        if (result.success) {
+                            showMessage('전단지가 성공적으로 삭제되었습니다.', 'success');
+                            setTimeout(() => {
+                                window.location.href = '/list.html';
+                            }, 1500);
+                        } else {
+                            showMessage(result.message || '삭제 중 오류가 발생했습니다.', 'error');
+                        }
+                    } catch (error) {
+                        showMessage('서버 연결 오류: ' + error.message, 'error');
+                    }
+                }
+            });
+        }
+        
+        // 가격 포맷팅
+        function formatPrice(price) {
+            return parseInt(price).toLocaleString();
+        }
+        
+        // 메시지 표시
+        function showMessage(text, type) {
+            const messageBox = document.getElementById('messageBox');
+            messageBox.textContent = text;
+            messageBox.className = `message ${type}`;
+            messageBox.style.display = 'block';
+        }
+        
+        // 뒤로 가기
+        function goBack() {
+            window.location.href = '/list.html';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+# 의존성 모듈
+node_modules/
+
+# 환경 변수 파일
+.env
+
+# 로그 파일
+logs
+*.log
+
+# 업로드된 파일들
+uploads/
+
+# 빌드 결과물
+dist/
+build/
+
+# 운영 체제 파일
+.DS_Store
+Thumbs.db
+
+# 에디터 설정 파일
+.idea/
+.vscode/
+*.swp
+*.swo
